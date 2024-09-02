@@ -179,6 +179,7 @@ export type MutationEditCarModificationArgs = {
 export type Query = {
   __typename?: 'Query'
   _health?: Maybe<Scalars['Boolean']['output']>
+  allCarModifications: Array<CarModification>
   carBrands: Array<CarBrand>
   carModels: Array<CarModel>
   carModifications: Array<CarModification>
@@ -217,6 +218,146 @@ export type GetBrandsQuery = {
   carBrands: Array<{ __typename?: 'CarBrand'; id: string; name: string }>
 }
 
+export type CreateBrandMutationVariables = Exact<{
+  name: Scalars['String']['input']
+}>
+
+export type CreateBrandMutation = {
+  __typename?: 'Mutation'
+  createCarBrand: { __typename?: 'CarBrand'; id: string; name: string }
+}
+
+export type EditBrandsMutationVariables = Exact<{
+  data: CarBrandData
+}>
+
+export type EditBrandsMutation = {
+  __typename?: 'Mutation'
+  editCarBrand: { __typename?: 'CarBrand'; id: string; name: string }
+}
+
+export type GetModelQueryVariables = Exact<{
+  brandId: Scalars['ID']['input']
+}>
+
+export type GetModelQuery = {
+  __typename?: 'Query'
+  carModels: Array<{
+    __typename?: 'CarModel'
+    id: string
+    name: string
+    brand: { __typename?: 'CarBrand'; id: string; name: string }
+  }>
+}
+
+export type CreateModelMutationVariables = Exact<{
+  name: Scalars['String']['input']
+  brandId: Scalars['ID']['input']
+}>
+
+export type CreateModelMutation = {
+  __typename?: 'Mutation'
+  createCarModel: {
+    __typename?: 'CarModel'
+    name: string
+    brand: { __typename?: 'CarBrand'; id: string }
+  }
+}
+
+export type EditModelMutationVariables = Exact<{
+  data: CarModelData
+}>
+
+export type EditModelMutation = {
+  __typename?: 'Mutation'
+  editCarModel: { __typename?: 'CarModel'; id: string; name: string }
+}
+
+export type GetModificationsQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetModificationsQuery = {
+  __typename?: 'Query'
+  carModifications: Array<{
+    __typename?: 'CarModification'
+    id: string
+    name: string
+    horsePower: number
+    weight: number
+    model: {
+      __typename?: 'CarModel'
+      name: string
+      brand: { __typename?: 'CarBrand'; name: string }
+    }
+  }>
+}
+
+export type GetModificationQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetModificationQuery = {
+  __typename?: 'Query'
+  allCarModifications: Array<{
+    __typename?: 'CarModification'
+    id: string
+    name: string
+    coupe: CarCoupe
+    horsePower: number
+    weight: number
+    model: {
+      __typename?: 'CarModel'
+      id: string
+      name: string
+      brand: { __typename?: 'CarBrand'; id: string; name: string }
+    }
+  }>
+}
+
+export type CreateModificationMutationVariables = Exact<{
+  name: Scalars['String']['input']
+  modelId: Scalars['ID']['input']
+}>
+
+export type CreateModificationMutation = {
+  __typename?: 'Mutation'
+  createCarModification: {
+    __typename?: 'CarModification'
+    name: string
+    coupe: CarCoupe
+    horsePower: number
+    weight: number
+    model: {
+      __typename?: 'CarModel'
+      id: string
+      name: string
+      brand: { __typename?: 'CarBrand'; id: string; name: string }
+    }
+  }
+}
+
+export type EditModificatioMutationVariables = Exact<{
+  data: CarModificationData
+}>
+
+export type EditModificatioMutation = {
+  __typename?: 'Mutation'
+  editCarModification: {
+    __typename?: 'CarModification'
+    id: string
+    name: string
+    coupe: CarCoupe
+    horsePower: number
+    weight: number
+  }
+}
+
+export type DeleteModificationMutationVariables = Exact<{
+  id: Scalars['ID']['input']
+}>
+
+export type DeleteModificationMutation = {
+  __typename?: 'Mutation'
+  deleteCarModification: boolean
+}
+
 export const CarBrandDataFragmentDoc = gql`
   fragment CarBrandData on CarBrand {
     id
@@ -230,6 +371,121 @@ export const GetBrandsDocument = gql`
     }
   }
   ${CarBrandDataFragmentDoc}
+`
+export const CreateBrandDocument = gql`
+  mutation CreateBrand($name: String!) {
+    createCarBrand(name: $name) {
+      id
+      name
+    }
+  }
+`
+export const EditBrandsDocument = gql`
+  mutation EditBrands($data: CarBrandData!) {
+    editCarBrand(data: $data) {
+      id
+      name
+    }
+  }
+`
+export const GetModelDocument = gql`
+  query GetModel($brandId: ID!) {
+    carModels(brandId: $brandId) {
+      brand {
+        id
+        name
+      }
+      id
+      name
+    }
+  }
+`
+export const CreateModelDocument = gql`
+  mutation CreateModel($name: String!, $brandId: ID!) {
+    createCarModel(name: $name, brandId: $brandId) {
+      brand {
+        id
+      }
+      name
+    }
+  }
+`
+export const EditModelDocument = gql`
+  mutation EditModel($data: CarModelData!) {
+    editCarModel(data: $data) {
+      id
+      name
+    }
+  }
+`
+export const GetModificationsDocument = gql`
+  query GetModifications {
+    carModifications(modelId: 3) {
+      id
+      model {
+        brand {
+          name
+        }
+        name
+      }
+      name
+      horsePower
+      weight
+    }
+  }
+`
+export const GetModificationDocument = gql`
+  query GetModification {
+    allCarModifications {
+      model {
+        brand {
+          id
+          name
+        }
+        id
+        name
+      }
+      id
+      name
+      coupe
+      horsePower
+      weight
+    }
+  }
+`
+export const CreateModificationDocument = gql`
+  mutation CreateModification($name: String!, $modelId: ID!) {
+    createCarModification(name: $name, modelId: $modelId) {
+      model {
+        id
+        name
+        brand {
+          id
+          name
+        }
+      }
+      name
+      coupe
+      horsePower
+      weight
+    }
+  }
+`
+export const EditModificatioDocument = gql`
+  mutation EditModificatio($data: CarModificationData!) {
+    editCarModification(data: $data) {
+      id
+      name
+      coupe
+      horsePower
+      weight
+    }
+  }
+`
+export const DeleteModificationDocument = gql`
+  mutation DeleteModification($id: ID!) {
+    deleteCarModification(id: $id)
+  }
 `
 
 export type SdkFunctionWrapper = <T>(
@@ -261,6 +517,151 @@ export function getSdk(
           }),
         'GetBrands',
         'query'
+      )
+    },
+    CreateBrand(
+      variables: CreateBrandMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<CreateBrandMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<CreateBrandMutation>(CreateBrandDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'CreateBrand',
+        'mutation'
+      )
+    },
+    EditBrands(
+      variables: EditBrandsMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<EditBrandsMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<EditBrandsMutation>(EditBrandsDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'EditBrands',
+        'mutation'
+      )
+    },
+    GetModel(
+      variables: GetModelQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<GetModelQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<GetModelQuery>(GetModelDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'GetModel',
+        'query'
+      )
+    },
+    CreateModel(
+      variables: CreateModelMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<CreateModelMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<CreateModelMutation>(CreateModelDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'CreateModel',
+        'mutation'
+      )
+    },
+    EditModel(
+      variables: EditModelMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<EditModelMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<EditModelMutation>(EditModelDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'EditModel',
+        'mutation'
+      )
+    },
+    GetModifications(
+      variables?: GetModificationsQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<GetModificationsQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<GetModificationsQuery>(
+            GetModificationsDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'GetModifications',
+        'query'
+      )
+    },
+    GetModification(
+      variables?: GetModificationQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<GetModificationQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<GetModificationQuery>(
+            GetModificationDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'GetModification',
+        'query'
+      )
+    },
+    CreateModification(
+      variables: CreateModificationMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<CreateModificationMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<CreateModificationMutation>(
+            CreateModificationDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'CreateModification',
+        'mutation'
+      )
+    },
+    EditModificatio(
+      variables: EditModificatioMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<EditModificatioMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<EditModificatioMutation>(
+            EditModificatioDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'EditModificatio',
+        'mutation'
+      )
+    },
+    DeleteModification(
+      variables: DeleteModificationMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<DeleteModificationMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DeleteModificationMutation>(
+            DeleteModificationDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'DeleteModification',
+        'mutation'
       )
     },
   }

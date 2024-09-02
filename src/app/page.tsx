@@ -1,17 +1,15 @@
-import { GraphQLBackend } from '@lib/api/graphql'
-import TestCors from '@/app/TestCors'
+import Link from 'next/link';
+import Table from './components/Table'
+import { getAllCars } from './services/carService'
+import TestCors from '@/app/TestCors';
+import React from 'react'
 
 export default async function Home() {
-  const brand = await GraphQLBackend.GetBrands()
-
   return (
-    <div className="">
+    <div className="flex flex-col max-w-5xl min-w-5xl">
       <TestCors />
-      <div className="text-xs font-bold">
-        {brand.carBrands?.map((brand) => (
-          <div key={brand.id}>{brand.name}</div>
-        ))}
-      </div>
+      <Link className="inline bg-blue-500 w-20 pointer" href="/edit">Create Car</Link>
+      <Table />
     </div>
   )
 }

@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import ReactQueryProvider from './services/ReactQueryProvider'
+import CarProvider from './provider/CarContextProvider';
 import './globals.css'
 
 
@@ -15,7 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div>{children}</div>
+        <CarProvider>
+          <ReactQueryProvider>
+            <div className="flex justify-center">{children}</div>
+          </ReactQueryProvider>
+        </CarProvider>
       </body>
     </html>
   )
